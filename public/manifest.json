@@ -1,0 +1,30 @@
+{
+  "name": "Physio Buddy - Your Personal Physiotherapy Reminder",
+  "short_name": "Physio Buddy",
+  "description": "Stay consistent with your physiotherapy routine. Set gentle reminders, track your progress, and build healthy recovery habits.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2dd4bf",
+  "orientation": "portrait",
+  "categories": ["health", "medical", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}
