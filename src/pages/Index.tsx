@@ -35,7 +35,7 @@ const Index = () => {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              Build healthy habits with gentle reminders for your physiotherapy routine. 
+              Build healthy habits with gentle reminders for your physiotherapy routine.<br></br>
               Your body will thank you for the consistency.
             </p>
           </CardContent>
@@ -55,7 +55,9 @@ const Index = () => {
 
         {/* Footer */}
         <div className="text-center text-sm text-muted-foreground py-4">
-          <p>Remember: Consistency beats intensity. Take care of yourself! 💚</p>
+          <p>Consistency beats intensity.<br></br> 
+          <br></br>
+          Made with 💚 By Abhay!</p>
         </div>
       </div>
     </div>
