@@ -121,7 +121,7 @@ export function ExerciseManager({ onExercisesChange }: ExerciseManagerProps) {
                   id="exercise-name"
                   value={newExerciseName}
                   onChange={(e) => setNewExerciseName(e.target.value)}
-                  placeholder="e.g., Shoulder rolls"
+                  placeholder="eg: Shoulder Rolls"
                   onKeyDown={(e) => e.key === 'Enter' && addExercise()}
                 />
               </div>
@@ -131,7 +131,7 @@ export function ExerciseManager({ onExercisesChange }: ExerciseManagerProps) {
                   id="exercise-note"
                   value={newExerciseNote}
                   onChange={(e) => setNewExerciseNote(e.target.value)}
-                  placeholder="e.g., 10 reps, slow and controlled"
+                  placeholder="eg: 10 Reps, Slow and controlled"
                   rows={3}
                 />
               </div>
@@ -204,7 +204,7 @@ export function ExerciseManager({ onExercisesChange }: ExerciseManagerProps) {
                 id="edit-exercise-name"
                 value={newExerciseName}
                 onChange={(e) => setNewExerciseName(e.target.value)}
-                placeholder="e.g., Shoulder rolls"
+                placeholder="eg: Shoulder Rolls"
               />
             </div>
             <div>
@@ -213,7 +213,7 @@ export function ExerciseManager({ onExercisesChange }: ExerciseManagerProps) {
                 id="edit-exercise-note"
                 value={newExerciseNote}
                 onChange={(e) => setNewExerciseNote(e.target.value)}
-                placeholder="e.g., 10 reps, slow and controlled"
+                placeholder="eg: 10 Reps, Slow and controlled"
                 rows={3}
               />
             </div>
