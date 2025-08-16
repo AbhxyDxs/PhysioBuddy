@@ -27,23 +27,40 @@ export class NotificationService {
 
   static showNotification(title: string, body: string, actions?: { title: string; action: string }[]): Notification | null {
     if (!this.hasPermission()) {
+      console.log('No notification permission');
       return null;
     }
 
-    const notification = new Notification(title, {
-      body,
-      icon: '/favicon.ico',
-      badge: '/favicon.ico',
-      requireInteraction: true,
-      silent: false
-    });
+    try {
+      const notification = new Notification(title, {
+        body,
+        icon: '/favicon.ico',
+        badge: '/favicon.ico',
+        requireInteraction: true,
+        silent: false,
+        tag: 'physio-reminder' // Prevents duplicate notifications
+      });
 
-    notification.onclick = () => {
-      window.focus();
-      notification.close();
-    };
+      notification.onclick = () => {
+        console.log('Notification clicked');
+        window.focus();
+        notification.close();
+      };
 
-    return notification;
+      notification.onerror = (error) => {
+        console.error('Notification error:', error);
+      };
+
+      // Auto-close after 30 seconds if not interacted with
+      setTimeout(() => {
+        notification.close();
+      }, 30000);
+
+      return notification;
+    } catch (error) {
+      console.error('Failed to create notification:', error);
+      return null;
+    }
   }
 
   static scheduleReminders(): void {
@@ -51,28 +68,75 @@ export class NotificationService {
     
     const settings = StorageService.getSettings();
     if (!settings.remindersEnabled || !this.hasPermission()) {
+      console.log('Reminders not enabled or no permission');
       return;
     }
 
     const scheduleNext = () => {
       const intervalMs = settings.intervalMinutes * 60 * 1000;
+      const nextTime = new Date(Date.now() + intervalMs);
+      
+      console.log('Scheduling next reminder for:', nextTime);
       
       this.timeoutId = setTimeout(() => {
-        this.showNotification(
+        console.log('Showing notification at:', new Date());
+        
+        // Show the notification
+        const notification = this.showNotification(
           'Time for your physio routine!',
           'Tap to view your exercises and mark as complete.'
         );
+        
+        if (notification) {
+          console.log('Notification shown successfully');
+        } else {
+          console.log('Failed to show notification');
+        }
         
         // Schedule the next reminder
         scheduleNext();
       }, intervalMs);
 
       // Update next scheduled time
-      const nextTime = new Date(Date.now() + intervalMs);
       StorageService.saveSettings({ nextScheduledAt: nextTime });
     };
 
-    scheduleNext();
+    // Check if we have a scheduled time that already passed
+    const currentSettings = StorageService.getSettings();
+    const now = new Date();
+    
+    if (currentSettings.nextScheduledAt && currentSettings.nextScheduledAt <= now) {
+      // Time has passed, trigger notification immediately and schedule next
+      console.log('Scheduled time has passed, triggering immediately');
+      this.showNotification(
+        'Time for your physio routine!',
+        'Tap to view your exercises and mark as complete.'
+      );
+      scheduleNext();
+    } else if (currentSettings.nextScheduledAt && currentSettings.nextScheduledAt > now) {
+      // We have a future scheduled time, schedule for that time
+      const timeUntilNext = currentSettings.nextScheduledAt.getTime() - now.getTime();
+      console.log('Resuming existing schedule, time until next:', timeUntilNext / 1000, 'seconds');
+      
+      this.timeoutId = setTimeout(() => {
+        console.log('Showing resumed notification at:', new Date());
+        
+        const notification = this.showNotification(
+          'Time for your physio routine!',
+          'Tap to view your exercises and mark as complete.'
+        );
+        
+        if (notification) {
+          console.log('Resumed notification shown successfully');
+        }
+        
+        // Continue with regular scheduling
+        scheduleNext();
+      }, timeUntilNext);
+    } else {
+      // No existing schedule, start fresh
+      scheduleNext();
+    }
   }
 
   static clearScheduledReminders(): void {
