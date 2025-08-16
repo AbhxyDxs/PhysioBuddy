@@ -115,7 +115,15 @@ export function ReminderManager() {
     const diff = date.getTime() - now.getTime();
     
     if (diff <= 0) {
-      return "Now";
+      // If time has passed, reschedule reminders to fix stuck timer
+      if (remindersEnabled) {
+        console.log('Timer expired, rescheduling...');
+        setTimeout(() => {
+          NotificationService.scheduleReminders();
+          loadSettings(); // Refresh the next reminder time
+        }, 1000);
+      }
+      return "Triggering...";
     }
     
     const minutes = Math.floor(diff / (1000 * 60));
@@ -132,14 +140,12 @@ export function ReminderManager() {
   };
 
   const intervalOptions = [
+    { value: 15, label: "15 minutes" },
     { value: 30, label: "30 minutes" },
     { value: 60, label: "1 hour" },
     { value: 90, label: "1.5 hours" },
     { value: 120, label: "2 hours" },
     { value: 180, label: "3 hours" },
-    { value: 240, label: "4 hours" },
-    { value: 360, label: "6 hours" },
-    { value: 480, label: "8 hours" },
   ];
 
   return (
